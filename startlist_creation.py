@@ -32,7 +32,14 @@ def getStartLists(eventId, wreDate, sprintWRE, firstBibNumber, firstStart,
                                 eventSpecificFunction[1], qualificationRace, bestRankedFirst,
                                 startingGroups, randomSeed, eventSpecificArgs[1])
 
+    print('Double check the following runners who supposably have no WRE points currently: ')
+    for startlist in [startListM, startListW]:
+        # print(startlist.loc[startlist.WRS == 0].Name)
+        for runner in list(startlist.loc[startlist.WRS == 0].Name):
+            print('\t' + runner)
+    
     saveToXlsx(startListM, startListW, eventId, qualificationRace, startingGroups, True)
+
 
     return (startListM, startListW)
 
@@ -49,7 +56,7 @@ def createStartLists(wrs, entries, firstBibNumber, firstStart, startInt,
     entries.insert(0, 'WRS', entries.loc[:,'Name'].apply(lambda x: 0 if x not in wrs.Name.values 
                                             else wrs.loc[wrs['Name'] == x, 'WRS points'].iloc[0]))
     entries.sort_values(by=['WRS'], ascending=False, ignore_index=True, inplace=True)
-    
+
     if eventSpecificFunction != None:
         entries = eventSpecificFunction(entries, firstBibNumber, firstStart, startInt, 
                      amountLongerStartInterval, timeGap, qualificationRace, bestRankedFirst,
